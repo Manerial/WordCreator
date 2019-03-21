@@ -1,0 +1,1 @@
+This folder will store all the results of the main program.

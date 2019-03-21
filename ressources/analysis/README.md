@@ -1,0 +1,1 @@
+This folder will store all the analysis of the words list you will give to the main program.

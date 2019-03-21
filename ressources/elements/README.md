@@ -1,0 +1,1 @@
+This folder will store all the words list you will give to the main program. You can add yours here. Don't forget to change the ELEMENT's name in the Launcher.
