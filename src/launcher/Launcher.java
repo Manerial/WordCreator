@@ -27,7 +27,7 @@ public class Launcher {
 		String output1 = "new_français.txt";
 		WordAnalyserManager.createWordList(1000, "", outputAnalysis, output1);
 		
-		String output2 = "new_français_5.txt";
+		String output2 = "new_français_length_5.txt";
 		WordAnalyserManager.createWordListFixLength(1000, "", outputAnalysis, output2, 5);
 		
 		String inputRelex = "français_common.txt";
