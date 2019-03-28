@@ -2,7 +2,7 @@ package launcher;
 import java.io.*;
 import org.json.*;
 
-import utilities.WordAnalyserManager;
+import word_analyser.WordAnalyserManager;
 
 /**
  * 
