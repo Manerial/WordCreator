@@ -2,6 +2,7 @@ package launcher;
 import java.io.*;
 import org.json.*;
 
+import relexifier.Relex;
 import word_analyser.WordAnalyserManager;
 
 /**
@@ -32,6 +33,6 @@ public class Launcher {
 		
 		String inputRelex = "français_common.txt";
 		String outputRelex = "relex_français.txt";
-		WordAnalyserManager.createRelex(inputRelex, outputAnalysis, outputRelex);
+		Relex.createRelex(inputRelex, outputAnalysis, outputRelex);
 	}
 }

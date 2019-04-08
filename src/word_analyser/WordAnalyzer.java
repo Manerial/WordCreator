@@ -90,7 +90,8 @@ public class WordAnalyzer {
 		}
 
 		while (!end) {
-			String lastBigram = newWord.substring(newWord.length() - 2, newWord.length());
+			int minLengthOfWord = (newWord.length() >= 2) ? newWord.length() - 2 : 0;
+			String lastBigram = newWord.substring(minLengthOfWord, newWord.length());
 			JSONObject lastBigramAnalysis = frequencyBigramsAnalysis.getJSONObject(lastBigram);
 			int sumOfChildsBigramFreq = getSumOfBigramNextCharFrequency(lastBigramAnalysis);
 			int nextCharRank = random.nextInt(sumOfChildsBigramFreq) + 1;
