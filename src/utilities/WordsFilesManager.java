@@ -74,7 +74,7 @@ public class WordsFilesManager {
 	 * @throws IOException : for file management errors
 	 * @throws JSONException : for JSON error
 	 */
-	public static void printWordListInResultFile(String resultFile, List<String> newWordList) throws IOException, JSONException {
+	public static void printStringListInResultFile(String resultFile, List<String> newWordList) throws IOException, JSONException {
 		PrintWriter outputFile = writeFile(RESULT_FOLDER + resultFile);
 		for (String newWord : newWordList) {
 			outputFile.println(newWord);
@@ -99,6 +99,10 @@ public class WordsFilesManager {
 
 	public static BufferedReader readElementsFile(String elementsFile) throws FileNotFoundException {
 		return readFile(ELEMENTS_FOLDER + elementsFile);
+	}
+
+	public static BufferedReader readResultFile(String resultFile) throws FileNotFoundException {
+		return readFile(RESULT_FOLDER + resultFile);
 	}
 	
 	private static BufferedReader readFile(String path) throws FileNotFoundException {

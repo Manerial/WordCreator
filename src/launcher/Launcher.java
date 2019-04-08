@@ -34,5 +34,8 @@ public class Launcher {
 		String inputRelex = "français_common.txt";
 		String outputRelex = "relex_français.txt";
 		Relex.createRelex(inputRelex, outputAnalysis, outputRelex);
+		
+		String testRelex = "test_relex.txt";
+		Relex.relexifyText(testRelex, outputRelex);
 	}
 }

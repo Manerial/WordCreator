@@ -53,7 +53,7 @@ public class WordAnalyserManager {
 			} while (createdWordList.contains(createdWord));
 			createdWordList.add(createdWord);
 		}
-		WordsFilesManager.printWordListInResultFile(resultFile, createdWordList);
+		WordsFilesManager.printStringListInResultFile(resultFile, createdWordList);
 	}
 
 	/**
@@ -78,6 +78,6 @@ public class WordAnalyserManager {
 			} while (createdWordList.contains(createdWord) || createdWord.length() != wordLength);
 			createdWordList.add(createdWord);
 		}
-		WordsFilesManager.printWordListInResultFile(resultFile, createdWordList);
+		WordsFilesManager.printStringListInResultFile(resultFile, createdWordList);
 	}
 }
