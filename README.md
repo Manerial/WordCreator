@@ -17,12 +17,12 @@ To launch it, you can :
 	-use the menu : Run -> Run
 To change it : open the project from the Eclipse window -> open the src folder -> open the launcher package (folder) -> double click on Launcher.java
 
-=====RESSOURCES=====
-This project uses different ressources files.
-These files are stored in the ressources folder of the WordCreator project.
+=====RESOURCES=====
+This project uses different resources files.
+These files are stored in the resources folder of the WordCreator project.
 You can update them as much as you want (adding/removing lines).
 
-=====How does it work ?===== This project uses files of words to do some analysis and use them to create new words. Basicaly, it will look for all the bigrams (couple of letters) of a word and save their frequency of appearing. It will also save the frequency of all the next letters that will appear after a bigram.
+=====How does it work ?===== This project uses files of words to do some analysis and use them to create new words. Basically, it will look for all the bigrams (couple of letters) of a word and save their frequency of appearing. It will also save the frequency of all the next letters that will appear after a bigram.
 
 It works like a decision tree. When you have your first bigram (like "be" in this example), the program will randomly choose one of the next letters that can fit. We won't find abberations like finding "mlfpxct" thanks to this method, but only words that could have the most chance to appears.
 
