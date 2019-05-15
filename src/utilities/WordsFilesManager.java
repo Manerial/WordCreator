@@ -18,10 +18,10 @@ import org.json.JSONObject;
 import word_analyser.WordAnalyzer;
 
 public class WordsFilesManager {
-	private static String RESSOURCE_PATH = System.getProperty("user.dir") + "\\ressources\\";
-	private static String ELEMENTS_FOLDER = RESSOURCE_PATH + "elements\\";
-	private static String ANALYSIS_FOLDER = RESSOURCE_PATH + "analysis\\";
-	private static String RESULT_FOLDER = RESSOURCE_PATH + "result\\";
+	private static String RESOURCE_PATH = System.getProperty("user.dir") + "\\resources\\";
+	private static String ELEMENTS_FOLDER = RESOURCE_PATH + "elements\\";
+	private static String ANALYSIS_FOLDER = RESOURCE_PATH + "analysis\\";
+	private static String RESULT_FOLDER = RESOURCE_PATH + "result\\";
 
 	/**
 	 * Parse an analysis file to feed an analyzer
