@@ -14,6 +14,33 @@ public class WordAnalyzer {
 	private Integer			totalAnalyzedWords			= 0;
 	// The frequency of the bigrams of letters and the frequency of the next letters that can follow them
 	private JSONObject		frequencyBigramsAnalysis	= new JSONObject();
+	private String analysisFilePath;
+	private String elementsFilePath;
+	private String resultsFilePath;
+
+	public String getAnalysisFilePath() {
+		return analysisFilePath;
+	}
+
+	public void setAnalysisFilePath(String analysisFilePath) {
+		this.analysisFilePath = analysisFilePath;
+	}
+
+	public String getElementsFilePath() {
+		return elementsFilePath;
+	}
+
+	public void setElementsFilePath(String elementsFilePath) {
+		this.elementsFilePath = elementsFilePath;
+	}
+
+	public String getResultsFilePath() {
+		return resultsFilePath;
+	}
+
+	public void setResultsFilePath(String resultsFilePath) {
+		this.resultsFilePath = resultsFilePath;
+	}
 
 	public Integer getTotalLetters() {
 		return totalLetters;
@@ -21,6 +48,10 @@ public class WordAnalyzer {
 
 	public void setTotalLetters(Integer totalLetters) {
 		this.totalLetters = totalLetters;
+	}
+
+	public void incrementTotalLetters() {
+		totalLetters++;
 	}
 
 	public Integer getTotalAnalyzedWords() {
@@ -31,43 +62,16 @@ public class WordAnalyzer {
 		this.totalAnalyzedWords = totalAnalysedWords;
 	}
 
+	public void incrementTotalAnalyzedWords() {
+		totalAnalyzedWords++;
+	}
+
 	public JSONObject getFrequencyBigramsAnalysis() {
 		return frequencyBigramsAnalysis;
 	}
 
 	public void setFrequencyBigramsAnalysis(JSONObject frequencyBigramsAnalysis) {
 		this.frequencyBigramsAnalysis = frequencyBigramsAnalysis;
-	}
-
-	/**
-	 * Analyze a word : it number of letters and the bigrams used in it
-	 * 
-	 * @param word : The word to analyze
-	 * @throws JSONException : for JSON error
-	 */
-	public void analysisWord(String word) throws JSONException {
-		String characterI0;
-		String characterI1;
-		String characterI2;
-		for (int charPlace = 0; charPlace < word.length(); charPlace++) {
-			int nextCharPlace = charPlace + 1;
-			int secondCharPlace = charPlace + 2;
-			totalLetters++;
-			characterI0 = Character.toString(word.charAt(charPlace));
-			characterI1 = (nextCharPlace < word.length()) ? Character.toString(word.charAt(nextCharPlace)) : "";
-			characterI2 = (secondCharPlace < word.length()) ? Character.toString(word.charAt(secondCharPlace)) : "";
-
-			if (!characterI1.equals("")) {
-				String bigramme = characterI0 + characterI1;
-				saveBigramNextChar(bigramme, characterI2);
-			}
-			
-			if (charPlace == 0) {
-				String bigramme = "" + characterI0;
-				saveBigramNextChar(bigramme, characterI1);
-			}
-		}
-		totalAnalyzedWords++;
 	}
 
 	/**
@@ -93,7 +97,7 @@ public class WordAnalyzer {
 			int minLengthOfWord = (newWord.length() >= 2) ? newWord.length() - 2 : 0;
 			String lastBigram = newWord.substring(minLengthOfWord, newWord.length());
 			JSONObject lastBigramAnalysis = frequencyBigramsAnalysis.getJSONObject(lastBigram);
-			int sumOfChildsBigramFreq = getSumOfBigramNextCharFrequency(lastBigramAnalysis);
+			int sumOfChildsBigramFreq = getBigramAppearanceNumber(lastBigramAnalysis);
 			int nextCharRank = random.nextInt(sumOfChildsBigramFreq) + 1;
 			int sumOfPrevBigramsFreq = 0;
 			Iterator<?> iter = lastBigramAnalysis.keys();
@@ -119,7 +123,7 @@ public class WordAnalyzer {
 	 * @param nextChar : Next possible char of the bigram that will be register
 	 * @throws JSONException : for JSON error
 	 */
-	private void saveBigramNextChar(String bigramme, String nextChar) throws JSONException {
+	public void saveBigramNextChar(String bigramme, String nextChar) throws JSONException {
 		if (frequencyBigramsAnalysis.has(bigramme)) {
 			JSONObject analysebigrammeDiag = frequencyBigramsAnalysis.getJSONObject(bigramme);
 			if (analysebigrammeDiag.has(nextChar)) {
@@ -167,13 +171,13 @@ public class WordAnalyzer {
 	}
 
 	/**
-	 * Get the frequency of appearance of a bigram
+	 * Get the number of appearance of a bigram
 	 * 
 	 * @param bigram : The bigram we need to get the frequency
 	 * @return The frequency of appearance of a bigram
 	 * @throws JSONException : for JSON error
 	 */
-	private static int getSumOfBigramNextCharFrequency(JSONObject bigram) throws JSONException {
+	private int getBigramAppearanceNumber(JSONObject bigram) throws JSONException {
 		int sumOfFrequencies = 0;
 		Iterator<?> iter = bigram.keys();
 		while (iter.hasNext()) {
