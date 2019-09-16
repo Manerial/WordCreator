@@ -26,54 +26,18 @@ public class WordAnalyserManager {
 	 * @param elementsFile : The name of the file that contains the words to be analyzed
 	 * @param analysisFilePath : The name of the file where the analysis result will be stored
 	 */
-	public void analysisElementsFileAndRegisterResult() {
+	public void analysisAndRegister() {
 		try {
 			BufferedReader br = WordsFilesManager.readElementsFile(analyzer);
 			
 			String word;
 			while ((word = br.readLine()) != null) {
-				analysisWord(word);
+				analyzer.analysisWord(word);
 			}
 			br.close();
 			WordsFilesManager.saveAnalysisFile(analyzer);
 		} catch (Exception e) {
 			System.out.println(e.toString());
-		}
-	}
-
-
-	/**
-	 * Analyze a word : it number of letters and the bigrams used in it
-	 * 
-	 * @param word : The word to analyze
-	 * @throws JSONException : for JSON error
-	 */
-	public void analysisWord(String word) throws JSONException {
-		String characterAtPosA;
-		String characterAtPosB;
-		String characterAtPosC;
-		for (int charPosition = 0; charPosition < word.length(); charPosition++) {
-			int nextCharPosition = charPosition + 1;
-			int secondCharPosition = charPosition + 2;
-			characterAtPosA = BasicFunctions.getCharAtPosition(word, charPosition);
-			characterAtPosB = BasicFunctions.getCharAtPosition(word, nextCharPosition);
-			characterAtPosC = BasicFunctions.getCharAtPosition(word, secondCharPosition);
-			analyzer.incrementTotalLetters();
-			saveAnalysis(characterAtPosA, characterAtPosB, characterAtPosC, charPosition);
-		}
-		analyzer.incrementTotalAnalyzedWords();
-	}
-
-
-	private void saveAnalysis(String characterAtPosA, String characterAtPosB, String characterAtPosC, int characterPosition)
-			throws JSONException {
-		if (BasicFunctions.isFirstCharacter(characterPosition)) {
-			analyzer.saveBigramNextChar(characterAtPosA, characterAtPosB);
-		}
-		
-		if(characterAtPosB != "") {
-			String bigramme = characterAtPosA + characterAtPosB;
-			analyzer.saveBigramNextChar(bigramme, characterAtPosC);
 		}
 	}
 

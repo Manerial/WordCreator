@@ -6,6 +6,8 @@ import java.util.Random;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import utilities.BasicFunctions;
+
 public class WordAnalyzer {
 	private static Random	random						= new Random();
 	// The sum of letters of analyzed words in the element file
@@ -74,45 +76,40 @@ public class WordAnalyzer {
 		this.frequencyBigramsAnalysis = frequencyBigramsAnalysis;
 	}
 
+
 	/**
+	 * Analyze a word : it number of letters and the bigrams used in it
 	 * 
-	 * Create a new word using the parameters of the analyzer
-	 * 
-	 * @param begin : If set, will be the beginning of the new word
-	 * @return A new word
+	 * @param word : The word to analyze
 	 * @throws JSONException : for JSON error
 	 */
-	public String createWord(String begin) throws JSONException {
-		String newWord = begin;
-		boolean end = false;
-		
-		if (newWord.isEmpty()) {
-			newWord = getBeginOfWord();
-			if (newWord.length() == 1) {
-				return newWord;
-			}
+	public void analysisWord(String word) throws JSONException {
+		String characterAtPosA;
+		String characterAtPosB;
+		String characterAtPosC;
+		for (int charPosition = 0; charPosition < word.length(); charPosition++) {
+			int nextCharPosition = charPosition + 1;
+			int secondCharPosition = charPosition + 2;
+			characterAtPosA = BasicFunctions.getCharAtPosition(word, charPosition);
+			characterAtPosB = BasicFunctions.getCharAtPosition(word, nextCharPosition);
+			characterAtPosC = BasicFunctions.getCharAtPosition(word, secondCharPosition);
+			totalLetters++;
+			saveAnalysis(characterAtPosA, characterAtPosB, characterAtPosC, charPosition);
 		}
+		totalAnalyzedWords++;
+	}
 
-		while (!end) {
-			int minLengthOfWord = (newWord.length() >= 2) ? newWord.length() - 2 : 0;
-			String lastBigram = newWord.substring(minLengthOfWord, newWord.length());
-			JSONObject lastBigramAnalysis = frequencyBigramsAnalysis.getJSONObject(lastBigram);
-			int sumOfChildsBigramFreq = getBigramAppearanceNumber(lastBigramAnalysis);
-			int nextCharRank = random.nextInt(sumOfChildsBigramFreq) + 1;
-			int sumOfPrevBigramsFreq = 0;
-			Iterator<?> iter = lastBigramAnalysis.keys();
-			while (sumOfPrevBigramsFreq < nextCharRank && iter.hasNext()) {
-				String nextChar = iter.next().toString();
-				sumOfPrevBigramsFreq += lastBigramAnalysis.getInt(nextChar);
-				if (sumOfPrevBigramsFreq >= nextCharRank) {
-					newWord += nextChar;
-					if (nextChar.equals("")) {
-						end = true;
-					}
-				}
-			}
+
+	private void saveAnalysis(String characterAtPosA, String characterAtPosB, String characterAtPosC, int characterPosition)
+			throws JSONException {
+		if (BasicFunctions.isFirstCharacter(characterPosition)) {
+			saveBigramNextChar(characterAtPosA, characterAtPosB);
 		}
-		return newWord;
+		
+		if(characterAtPosB != "") {
+			String bigramme = characterAtPosA + characterAtPosB;
+			saveBigramNextChar(bigramme, characterAtPosC);
+		}
 	}
 
 
@@ -137,6 +134,47 @@ public class WordAnalyzer {
 			analysebigrammeDiag.put(nextChar, 1);
 			frequencyBigramsAnalysis.put(bigramme, analysebigrammeDiag);
 		}
+	}
+
+	/**
+	 * 
+	 * Create a new word using the parameters of the analyzer
+	 * 
+	 * @param begin : If set, will be the beginning of the new word
+	 * @return A new word
+	 * @throws JSONException : for JSON error
+	 */
+	public String createWord(String begin) throws JSONException {
+		String newWord = begin;
+		boolean end = false;
+		
+		if (newWord.isEmpty()) {
+			newWord = getBeginOfWord();
+			if (newWord.length() == 1) {
+				return newWord;
+			}
+		}
+
+		while (!end) {
+			int minLengthOfWord = (newWord.length() >= 2) ? newWord.length() - 2 : 0;
+			String lastBigram = newWord.substring(minLengthOfWord, newWord.length());
+			JSONObject lastBigramAnalysis = frequencyBigramsAnalysis.getJSONObject(lastBigram);
+			int sumOfChildsBigramFreq = getBigramFrequencyNumber(lastBigramAnalysis);
+			int nextCharRank = random.nextInt(sumOfChildsBigramFreq) + 1;
+			int sumOfPrevBigramsFreq = 0;
+			Iterator<?> iter = lastBigramAnalysis.keys();
+			while (sumOfPrevBigramsFreq < nextCharRank && iter.hasNext()) {
+				String nextChar = iter.next().toString();
+				sumOfPrevBigramsFreq += lastBigramAnalysis.getInt(nextChar);
+				if (sumOfPrevBigramsFreq >= nextCharRank) {
+					newWord += nextChar;
+					if (nextChar.equals("")) {
+						end = true;
+					}
+				}
+			}
+		}
+		return newWord;
 	}
 
 	/**
@@ -177,7 +215,7 @@ public class WordAnalyzer {
 	 * @return The frequency of appearance of a bigram
 	 * @throws JSONException : for JSON error
 	 */
-	private int getBigramAppearanceNumber(JSONObject bigram) throws JSONException {
+	private int getBigramFrequencyNumber(JSONObject bigram) throws JSONException {
 		int sumOfFrequencies = 0;
 		Iterator<?> iter = bigram.keys();
 		while (iter.hasNext()) {

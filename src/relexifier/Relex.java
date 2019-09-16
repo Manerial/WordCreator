@@ -18,6 +18,10 @@ public class Relex {
 	public Relex(WordAnalyzer analyzer) {
 		this.analyzer = analyzer;
 	}
+
+	public void setWordAnalyzer(WordAnalyzer analyzer) {
+		this.analyzer = analyzer;
+	}
 	
 	/**
 	 * Create a relex of words (relex = a list of element words will match a list of created words)
