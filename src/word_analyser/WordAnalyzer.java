@@ -79,7 +79,7 @@ public class WordAnalyzer {
 	 * Analyze a word : it number of letters and the bigrams used in it
 	 * 
 	 * @param word : The word to analyze
-	 * @throws JSONException
+	 * @throws JSONException : All the JSON exceptions
 	 */
 	public void analysisWord(String word) throws JSONException {
 		String characterAtPosA;
@@ -104,7 +104,7 @@ public class WordAnalyzer {
 	 * @param characterAtPosB : The character at the position characterPosition + 1
 	 * @param characterAtPosC : The character at the position characterPosition + 2
 	 * @param characterPosition : The position of the character characterAtPosA
-	 * @throws JSONException
+	 * @throws JSONException : All the JSON exceptions
 	 */
 	private void saveAnalysis(String characterAtPosA, String characterAtPosB, String characterAtPosC, int characterPosition)
 			throws JSONException {
@@ -123,7 +123,7 @@ public class WordAnalyzer {
 	 * 
 	 * @param bigram : The bigram to register
 	 * @param nextChar : Next possible char of the bigram that will be register
-	 * @throws JSONException
+	 * @throws JSONException : All the JSON exceptions
 	 */
 	private void registerTrigram(String bigram, String nextChar) throws JSONException {
 		JSONObject thirdLetter = getFrequencyThirdLetter(bigram);
@@ -136,7 +136,7 @@ public class WordAnalyzer {
 	 * 
 	 * @param bigram : The two first letters of a trigram
 	 * @return the frequency analysis of the third letter of a trigram
-	 * @throws JSONException
+	 * @throws JSONException : All the JSON exceptions
 	 */
 	private JSONObject getFrequencyThirdLetter(String bigram) throws JSONException {
 		return (trigramsAnalysis.has(bigram)) ? trigramsAnalysis.getJSONObject(bigram) : new JSONObject();
@@ -145,9 +145,9 @@ public class WordAnalyzer {
 	/**
 	 * Add 1 occurrence to the third letter of the current trigram
 	 * 
-	 * @param thirdLetter : the third letter of the trigram
-	 * @param trigram : the trigram to update
-	 * @throws JSONException
+	 * @param thirdLetter : The third letter of the trigram
+	 * @param trigram : The trigram to update
+	 * @throws JSONException : All the JSON exceptions
 	 */
 	private void incrementFrequencyThirdLetter(String thirdLetter, JSONObject trigram) throws JSONException {
 		if (trigram.has(thirdLetter)) {
@@ -162,8 +162,8 @@ public class WordAnalyzer {
 	 * Create a new word using the parameters of the analyzer
 	 * 
 	 * @param begin : If set, will be the beginning of the new word
-	 * @return A new word
-	 * @throws JSONException
+	 * @return a new word
+	 * @throws JSONException : All the JSON exceptions
 	 */
 	public String createWord(String begin) throws JSONException {
 		String newWord = begin;
@@ -195,11 +195,11 @@ public class WordAnalyzer {
 	}
 
 	/**
-	 * Get a random character rank in all the availables one
+	 * Get a random character rank in all the availables trigrams
 	 * 
-	 * @param trigrams
-	 * @return
-	 * @throws JSONException
+	 * @param trigrams : all the availables trigrams
+	 * @return the random rank of a character
+	 * @throws JSONException : All the JSON exceptions
 	 */
 	private int getRandomCharRank(JSONObject trigrams) throws JSONException {
 		int sumOfTrigramsFrequency = getSumOfTrigramsFrequency(trigrams);
@@ -210,7 +210,7 @@ public class WordAnalyzer {
 	 * Check if the character is a word end (empty)
 	 * 
 	 * @param character : the character to check
-	 * @return
+	 * @return true if the character is a word end
 	 */
 	private boolean endOfWord(String character) {
 		return character.equals("");
@@ -221,7 +221,7 @@ public class WordAnalyzer {
 	 * 
 	 * @param word : The word to use
 	 * @return the next possibles trigrams that can match the end of the word
-	 * @throws JSONException
+	 * @throws JSONException : All the JSON exceptions
 	 */
 	private JSONObject getNextTrigramsPossibilities(String word) throws JSONException {
 		int lastStone = word.length();
@@ -235,7 +235,7 @@ public class WordAnalyzer {
 	 * Get the two first letters of a word
 	 * 
 	 * @return The two first letters of a word
-	 * @throws JSONException
+	 * @throws JSONException : All the JSON exceptions
 	 */
 	private String getWordBeginning() throws JSONException {
 		int rankToFind = getRandomMonogramRank();
@@ -282,9 +282,9 @@ public class WordAnalyzer {
 	/**
 	 * Get the number of appearance of a bigram
 	 * 
-	 * @param bigram : The bigram we need to get the frequency
+	 * @param trigrams : The bigram we need to get the frequency
 	 * @return The frequency of appearance of a bigram
-	 * @throws JSONException
+	 * @throws JSONException : All the JSON exceptions
 	 */
 	private int getSumOfTrigramsFrequency(JSONObject trigrams) throws JSONException {
 		int sumFrequencies = 0;

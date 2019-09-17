@@ -22,8 +22,8 @@ public class WordAnalyserManager {
 
 	/**
 	 * Analysis a file containing words and save the result of the analysis in a file
-	 * @throws JSONException 
-	 * @throws IOException 
+	 * @throws JSONException : All the JSON exceptions
+	 * @throws IOException : All the IO exceptions
 	 */
 	public void analysisAndRegister() throws JSONException, IOException {
 		BufferedReader br = WordsFilesManager.readElementsFile(analyzer);

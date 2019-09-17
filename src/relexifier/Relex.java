@@ -50,7 +50,7 @@ public class Relex {
 	 * 
 	 * @param sourceWord : the source word
 	 * @param createdWord : the new word
-	 * @return
+	 * @return true if the created word matches the source one
 	 */
 	private boolean checkWordLength(String sourceWord, String createdWord) {
 		return createdWord.length() >= sourceWord.length() - 2 && createdWord.length() <= sourceWord.length() + 2;
@@ -59,8 +59,8 @@ public class Relex {
 	/**
 	 * Use a relex to relexify a text
 	 * 
-	 * @throws IOException
-	 * @throws JSONException
+	 * @throws IOException : All the IO exceptions
+	 * @throws JSONException : All the JSON exceptions
 	 */
 	public void relexifyText() throws IOException, JSONException {
 		JSONObject relex = readRelex();
@@ -81,7 +81,7 @@ public class Relex {
 	 * 
 	 * @param relex : the JSONObject relex to use
 	 * @param word : the word to convert
-	 * @return
+	 * @return the relexified word
 	 */
 	public String relexifyWord(JSONObject relex, String word) {
 		String relexWord = word;
@@ -95,8 +95,8 @@ public class Relex {
 	 * Open a relex and store it in a JSONObject
 	 * 
 	 * @return a JSONObject that contains the relex
-	 * @throws IOException
-	 * @throws JSONException
+	 * @throws IOException : All the IO exceptions
+	 * @throws JSONException : All the JSON exceptions
 	 */
 	private JSONObject readRelex() throws IOException, JSONException {
 		JSONObject relex = new JSONObject();

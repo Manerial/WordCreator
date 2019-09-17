@@ -32,7 +32,7 @@ public class BasicFunctions {
 	 * 
 	 * @param word : the word to get the character
 	 * @param charPosition : the position of the character to get
-	 * @return
+	 * @return the character at the charPosition of word, empty string if not found
 	 */
 	public static String getCharAtPosition(String word, int charPosition) {
 		return (charPosition < word.length()) ? Character.toString(word.charAt(charPosition)) : "";
