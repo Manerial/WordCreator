@@ -27,52 +27,42 @@ public class WordsFilesManager {
 	 * Parse an analysis file to feed an analyzer
 	 * 
 	 * @param analyzer : The analyzer object to feed with the analysis file data
+	 * @throws IOException 
+	 * @throws JSONException 
 	 */
-	public static void parseAnalysisFile(WordAnalyzer analyzer) {
-		try {
-			BufferedReader br = readFile(ANALYSIS_FOLDER + analyzer.getAnalysisFilePath());
-
-			String STotalLetters = br.readLine();
-			analyzer.setTotalLetters(Integer.parseInt(STotalLetters));
-
-			String STotalAnalysedWords = br.readLine();
-			analyzer.setTotalAnalyzedWords(Integer.parseInt(STotalAnalysedWords));
-
-			String SFrequencyBigramsAnalysis = br.readLine();
-			analyzer.setFrequencyBigramsAnalysis(new JSONObject(SFrequencyBigramsAnalysis));
-			br.close();
-		} catch (Exception e) {
-			System.out.println(e.toString());
-		}
+	public static void parseAnalysisFile(WordAnalyzer analyzer) throws JSONException, IOException {
+		BufferedReader br = readFile(ANALYSIS_FOLDER + analyzer.getAnalysisFilePath());
+		analyzer.setTotalLetters(Integer.parseInt(br.readLine()));
+		analyzer.setTotalAnalyzedWords(Integer.parseInt(br.readLine()));
+		analyzer.setTrigramsAnalysis(new JSONObject(br.readLine()));
+		br.close();
 	}
 
 	/**
 	 * Save the parameters of an analyzer in a file
 	 * 
-	 * @param analysisFile : The name of the analysis file that will store the analyzer parameters
 	 * @param analyzer : The analyzer to save
-	 * @throws IOException : for file management errors
+	 * @throws IOException
 	 */
 	public static void saveAnalysisFile(WordAnalyzer analyzer) throws IOException {
 		PrintWriter outputFile = writeFile(ANALYSIS_FOLDER + analyzer.getAnalysisFilePath());
 		outputFile.println(analyzer.getTotalLetters());
 		outputFile.println(analyzer.getTotalAnalyzedWords());
-		outputFile.println(analyzer.getFrequencyBigramsAnalysis());
+		outputFile.println(analyzer.getTrigramsAnalysis());
 		outputFile.close();
 	}
-	
+
 	/**
-	 * Save the content of a result file and return a list
+	 * Read the content of a ELEMENT file and return a list
 	 * 
-	 * @param fileName : The name of the file containing the words to get
+	 * @param analyzer : The analyzer that contains the ELEMENT file name
 	 * @return A list of words contained in the elementFile
-	 * @throws IOException : for file management errors
-	 * @throws JSONException : for JSON error
+	 * @throws IOException 
 	 */
-	public static List<String> parseElementsFileInList(WordAnalyzer analyzer) throws IOException, JSONException {
+	public static List<String> parseElementsFileInList(WordAnalyzer analyzer) throws IOException {
+		ArrayList<String> result = new ArrayList<String>();
 		BufferedReader br = readElementsFile(analyzer);
 		String line;
-		ArrayList<String> result = new ArrayList<String>();
 		while ((line = br.readLine()) != null) {
 			result.add(line);
 		}
@@ -81,49 +71,63 @@ public class WordsFilesManager {
 	}
 
 	/**
-	 * Save a list of words in a file
+	 * Save a list of words in a RESULT file
 	 * 
-	 * @param fileName : The name of the file that will sore the words list
+	 * @param analyzer : The analyzer that contains the RESULT file name
 	 * @param newWordList : The list of words to save
-	 * @throws IOException : for file management errors
-	 * @throws JSONException : for JSON error
+	 * @throws IOException
+	 * @throws JSONException
 	 */
-	public static void printStringListInResultFile(WordAnalyzer analyzer, List<String> newWordList) throws IOException, JSONException {
-		PrintWriter outputFile = writeFile(RESULT_FOLDER + analyzer.getResultsFilePath());
+	public static void printListInResultFile(WordAnalyzer analyzer, List<String> newWordList) throws IOException, JSONException {
+		PrintWriter resultFile = writeFile(RESULT_FOLDER + analyzer.getResultsFilePath());
 		for (String newWord : newWordList) {
-			outputFile.println(newWord);
+			resultFile.println(newWord);
 		}
-		outputFile.close();
+		resultFile.close();
 	}
 
 	/**
 	 * Return a BufferReader using the ELEMENTS path
 	 * 
-	 * @param fileName : the name of the file to read
+	 * @param analyzer : The analyzer that contains the element file name
 	 * @return a BufferReader configured with the ELEMENT path
 	 * @throws FileNotFoundException
 	 */
 	public static BufferedReader readElementsFile(WordAnalyzer analyzer) throws FileNotFoundException {
 		return readFile(ELEMENTS_FOLDER + analyzer.getElementsFilePath());
 	}
-	
+
 	/**
 	 * Return a BufferReader using the RESULT path
 	 * 
-	 * @param fileName : the name of the file to read
+	 * @param analyzer : The analyzer that contains the result file name
 	 * @return a BufferReader configured with the RESULT path
 	 * @throws FileNotFoundException
 	 */
 	public static BufferedReader readResultsFile(WordAnalyzer analyzer) throws FileNotFoundException {
 		return readFile(RESULT_FOLDER + analyzer.getResultsFilePath());
 	}
-	
+
+	/**
+	 * Return a BufferedReader to read a file
+	 * 
+	 * @param filePath : the file path to read
+	 * @return a BufferedReader with the path of the file to read
+	 * @throws FileNotFoundException
+	 */
 	private static BufferedReader readFile(String filePath) throws FileNotFoundException {
 		InputStream ips = new FileInputStream(filePath);
 		InputStreamReader ipsr = new InputStreamReader(ips);
 		return new BufferedReader(ipsr);
 	}
-	
+
+	/**
+	 * Return a BufferedWriter to write into a file
+	 * 
+	 * @param filePath : the file path to write
+	 * @return a BufferedWriter with the path of the file to write
+	 * @throws IOException
+	 */
 	private static PrintWriter writeFile(String filePath) throws IOException {
 		FileWriter fw = new FileWriter(filePath);
 		BufferedWriter bw = new BufferedWriter(fw);

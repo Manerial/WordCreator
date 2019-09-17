@@ -26,9 +26,6 @@ public class Relex {
 	/**
 	 * Create a relex of words (relex = a list of element words will match a list of created words)
 	 * 
-	 * @param elementsFile : The name of the elements file that will be used as source of words
-	 * @param analysisFilePath : The name of the analysis file that will be used to create new words
-	 * @param relexFile : The name of the destination file of the relex
 	 * @throws JSONException : for JSON error
 	 * @throws IOException : for file management errors
 	 */
@@ -45,7 +42,7 @@ public class Relex {
 			usedWords.add(createdWord);
 			relex.add(sourceWord + "\t:\t" + createdWord);
 		}
-		WordsFilesManager.printStringListInResultFile(analyzer, relex);
+		WordsFilesManager.printListInResultFile(analyzer, relex);
 	}
 
 	/**
@@ -62,13 +59,11 @@ public class Relex {
 	/**
 	 * Use a relex to relexify a text
 	 * 
-	 * @param textPath : The path to the text to relexify
-	 * @param relexPath : The path to the relex to use
 	 * @throws IOException
 	 * @throws JSONException
 	 */
 	public void relexifyText() throws IOException, JSONException {
-		JSONObject relex = readRelex(analyzer.getResultsFilePath());
+		JSONObject relex = readRelex();
 		BufferedReader br = WordsFilesManager.readElementsFile(analyzer);
 		String line;
 	    while ((line = br.readLine()) != null) {
@@ -84,7 +79,7 @@ public class Relex {
 	/**
 	 * Convert a word into an other from the relex
 	 * 
-	 * @param relex : the relex to use
+	 * @param relex : the JSONObject relex to use
 	 * @param word : the word to convert
 	 * @return
 	 */
@@ -99,12 +94,11 @@ public class Relex {
 	/**
 	 * Open a relex and store it in a JSONObject
 	 * 
-	 * @param relexPath : The path to the relex to use
 	 * @return a JSONObject that contains the relex
 	 * @throws IOException
 	 * @throws JSONException
 	 */
-	private JSONObject readRelex(String relexPath) throws IOException, JSONException {
+	private JSONObject readRelex() throws IOException, JSONException {
 		JSONObject relex = new JSONObject();
 		BufferedReader br = WordsFilesManager.readResultsFile(analyzer);
 		String line;

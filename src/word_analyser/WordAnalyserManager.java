@@ -11,7 +11,7 @@ import utilities.WordsFilesManager;
 
 public class WordAnalyserManager {
 	private WordAnalyzer analyzer;
-	
+
 	public WordAnalyserManager(WordAnalyzer analyzer) {
 		setWordAnalyzer(analyzer);
 	}
@@ -22,23 +22,17 @@ public class WordAnalyserManager {
 
 	/**
 	 * Analysis a file containing words and save the result of the analysis in a file
-	 * 
-	 * @param elementsFile : The name of the file that contains the words to be analyzed
-	 * @param analysisFilePath : The name of the file where the analysis result will be stored
+	 * @throws JSONException 
+	 * @throws IOException 
 	 */
-	public void analysisAndRegister() {
-		try {
-			BufferedReader br = WordsFilesManager.readElementsFile(analyzer);
-			
-			String word;
-			while ((word = br.readLine()) != null) {
-				analyzer.analysisWord(word);
-			}
-			br.close();
-			WordsFilesManager.saveAnalysisFile(analyzer);
-		} catch (Exception e) {
-			System.out.println(e.toString());
+	public void analysisAndRegister() throws JSONException, IOException {
+		BufferedReader br = WordsFilesManager.readElementsFile(analyzer);
+		String word;
+		while ((word = br.readLine()) != null) {
+			analyzer.analysisWord(word);
 		}
+		br.close();
+		WordsFilesManager.saveAnalysisFile(analyzer);
 	}
 
 	/**
@@ -46,8 +40,6 @@ public class WordAnalyserManager {
 	 * 
 	 * @param numberOfWords : Number of word to create
 	 * @param beginning : If not empty, will be the begin of the new word
-	 * @param analysisFilePath : The name of the analysis file to use to create words
-	 * @param resultFile : The name of the file where the words creation will be stored
 	 * @throws JSONException : for JSON error
 	 * @throws IOException : for file management errors
 	 */
@@ -61,7 +53,7 @@ public class WordAnalyserManager {
 			} while (BasicFunctions.isWordUsed(createdWordList, createdWord));
 			createdWordList.add(createdWord);
 		}
-		WordsFilesManager.printStringListInResultFile(analyzer, createdWordList);
+		WordsFilesManager.printListInResultFile(analyzer, createdWordList);
 	}
 
 	/**
@@ -69,8 +61,6 @@ public class WordAnalyserManager {
 	 * 
 	 * @param numberOfWords : Number of word to create
 	 * @param beginning : If not empty, will be the begin of the new word
-	 * @param analysisFilePath : The name of the analysis file to use to create words
-	 * @param resultFile : The name of the file where the words creation will be stored
 	 * @param wordLength : The length of the created words
 	 * @throws JSONException : for JSON error
 	 * @throws IOException : for file management errors
@@ -85,6 +75,6 @@ public class WordAnalyserManager {
 			} while (BasicFunctions.isWordUsed(createdWordList, createdWord) || createdWord.length() != wordLength);
 			createdWordList.add(createdWord);
 		}
-		WordsFilesManager.printStringListInResultFile(analyzer, createdWordList);
+		WordsFilesManager.printListInResultFile(analyzer, createdWordList);
 	}
 }

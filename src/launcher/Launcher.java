@@ -50,33 +50,33 @@ public class Launcher {
 		testRelexifyText(relexAnalyzer);
 	}
 	
-	public static void testAnalysisAndRegister(WordAnalyzer wordAnalyzer) {
+	public static void testAnalysisAndRegister(WordAnalyzer wordAnalyzer) throws JSONException, IOException {
 		System.out.println("testAnalysisAndRegister");
 		WordAnalyserManager wordAnalyserManager = new WordAnalyserManager(wordAnalyzer);
 		wordAnalyserManager.analysisAndRegister();
 	}
 	
 	public static void testCreateWordList(WordAnalyzer wordAnalyzer) throws JSONException, IOException {
-		System.out.println("createWordList");
+		System.out.println("testCreateWordList");
 		WordAnalyserManager wordAnalyserManager = new WordAnalyserManager(wordAnalyzer);
 		wordAnalyserManager.createWordList(1000, "");
 	}
 	
 	public static void testCreateWordListFixLength(WordAnalyzer wordAnalyzer) throws JSONException, IOException {
-		System.out.println("createWordListFixLength");
+		System.out.println("testCreateWordListFixLength");
 		WordAnalyserManager wordAnalyserManager = new WordAnalyserManager(wordAnalyzer);
 		wordAnalyserManager.setWordAnalyzer(wordAnalyzer);
 		wordAnalyserManager.createWordListFixLength(1000, "", 5);
 	}
 	
 	public static void testCreateRelex(WordAnalyzer relexAnalyzer) throws JSONException, IOException {
-		System.out.println("createRelex");
+		System.out.println("testCreateRelex");
 		Relex relex = new Relex(relexAnalyzer);
 		relex.createRelex();
 	}
 	
 	public static void testRelexifyText(WordAnalyzer relexAnalyzer) throws IOException, JSONException {
-		System.out.println("relexifyText");
+		System.out.println("testRelexifyText");
 		Relex relex = new Relex(relexAnalyzer);
 		relex.relexifyText();
 	}

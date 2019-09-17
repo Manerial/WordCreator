@@ -1,5 +1,4 @@
 package word_analyser;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Random;
 
@@ -14,8 +13,8 @@ public class WordAnalyzer {
 	private Integer			totalLetters				= 0;
 	// The total number of analyzed words in the element file
 	private Integer			totalAnalyzedWords			= 0;
-	// The frequency of the bigrams of letters and the frequency of the next letters that can follow them
-	private JSONObject		frequencyBigramsAnalysis	= new JSONObject();
+	// The frequency of a bigrams of letters and the frequency of the next letters that can follow them
+	private JSONObject		trigramsAnalysis	= new JSONObject();
 	private String analysisFilePath;
 	private String elementsFilePath;
 	private String resultsFilePath;
@@ -68,20 +67,19 @@ public class WordAnalyzer {
 		totalAnalyzedWords++;
 	}
 
-	public JSONObject getFrequencyBigramsAnalysis() {
-		return frequencyBigramsAnalysis;
+	public JSONObject getTrigramsAnalysis() {
+		return trigramsAnalysis;
 	}
 
-	public void setFrequencyBigramsAnalysis(JSONObject frequencyBigramsAnalysis) {
-		this.frequencyBigramsAnalysis = frequencyBigramsAnalysis;
+	public void setTrigramsAnalysis(JSONObject trigramsAnalysis) {
+		this.trigramsAnalysis = trigramsAnalysis;
 	}
-
 
 	/**
 	 * Analyze a word : it number of letters and the bigrams used in it
 	 * 
 	 * @param word : The word to analyze
-	 * @throws JSONException : for JSON error
+	 * @throws JSONException
 	 */
 	public void analysisWord(String word) throws JSONException {
 		String characterAtPosA;
@@ -99,113 +97,186 @@ public class WordAnalyzer {
 		totalAnalyzedWords++;
 	}
 
-
+	/**
+	 * Save the bigrams in the analyzer
+	 * 
+	 * @param characterAtPosA : The character at the position characterPosition
+	 * @param characterAtPosB : The character at the position characterPosition + 1
+	 * @param characterAtPosC : The character at the position characterPosition + 2
+	 * @param characterPosition : The position of the character characterAtPosA
+	 * @throws JSONException
+	 */
 	private void saveAnalysis(String characterAtPosA, String characterAtPosB, String characterAtPosC, int characterPosition)
 			throws JSONException {
 		if (BasicFunctions.isFirstCharacter(characterPosition)) {
-			saveBigramNextChar(characterAtPosA, characterAtPosB);
+			registerTrigram(characterAtPosA, characterAtPosB);
 		}
-		
+
 		if(characterAtPosB != "") {
 			String bigramme = characterAtPosA + characterAtPosB;
-			saveBigramNextChar(bigramme, characterAtPosC);
+			registerTrigram(bigramme, characterAtPosC);
 		}
 	}
-
 
 	/**
 	 * Save the frequency analysis of a bigram
 	 * 
-	 * @param bigramme : The bigram to register
+	 * @param bigram : The bigram to register
 	 * @param nextChar : Next possible char of the bigram that will be register
-	 * @throws JSONException : for JSON error
+	 * @throws JSONException
 	 */
-	public void saveBigramNextChar(String bigramme, String nextChar) throws JSONException {
-		if (frequencyBigramsAnalysis.has(bigramme)) {
-			JSONObject analysebigrammeDiag = frequencyBigramsAnalysis.getJSONObject(bigramme);
-			if (analysebigrammeDiag.has(nextChar)) {
-				analysebigrammeDiag.put(nextChar, analysebigrammeDiag.getInt(nextChar) + 1);
-			} else {
-				analysebigrammeDiag.put(nextChar, 1);
-			}
-			frequencyBigramsAnalysis.put(bigramme, analysebigrammeDiag);
+	private void registerTrigram(String bigram, String nextChar) throws JSONException {
+		JSONObject thirdLetter = getFrequencyThirdLetter(bigram);
+		incrementFrequencyThirdLetter(nextChar, thirdLetter);
+		trigramsAnalysis.put(bigram, thirdLetter);
+	}
+
+	/**
+	 * Get the third letter of a trigram using the two first letters
+	 * 
+	 * @param bigram : The two first letters of a trigram
+	 * @return the frequency analysis of the third letter of a trigram
+	 * @throws JSONException
+	 */
+	private JSONObject getFrequencyThirdLetter(String bigram) throws JSONException {
+		return (trigramsAnalysis.has(bigram)) ? trigramsAnalysis.getJSONObject(bigram) : new JSONObject();
+	}
+
+	/**
+	 * Add 1 occurrence to the third letter of the current trigram
+	 * 
+	 * @param thirdLetter : the third letter of the trigram
+	 * @param trigram : the trigram to update
+	 * @throws JSONException
+	 */
+	private void incrementFrequencyThirdLetter(String thirdLetter, JSONObject trigram) throws JSONException {
+		if (trigram.has(thirdLetter)) {
+			int nextFrequency = trigram.getInt(thirdLetter) + 1;
+			trigram.put(thirdLetter, nextFrequency);
 		} else {
-			HashMap<String, Integer> analysebigrammeDiag = new HashMap<String, Integer>();
-			analysebigrammeDiag.put(nextChar, 1);
-			frequencyBigramsAnalysis.put(bigramme, analysebigrammeDiag);
+			trigram.put(thirdLetter, 1);
 		}
 	}
 
 	/**
-	 * 
 	 * Create a new word using the parameters of the analyzer
 	 * 
 	 * @param begin : If set, will be the beginning of the new word
 	 * @return A new word
-	 * @throws JSONException : for JSON error
+	 * @throws JSONException
 	 */
 	public String createWord(String begin) throws JSONException {
 		String newWord = begin;
-		boolean end = false;
-		
+
 		if (newWord.isEmpty()) {
-			newWord = getBeginOfWord();
+			newWord = getWordBeginning();
 			if (newWord.length() == 1) {
 				return newWord;
 			}
 		}
 
-		while (!end) {
-			int minLengthOfWord = (newWord.length() >= 2) ? newWord.length() - 2 : 0;
-			String lastBigram = newWord.substring(minLengthOfWord, newWord.length());
-			JSONObject lastBigramAnalysis = frequencyBigramsAnalysis.getJSONObject(lastBigram);
-			int sumOfChildsBigramFreq = getBigramFrequencyNumber(lastBigramAnalysis);
-			int nextCharRank = random.nextInt(sumOfChildsBigramFreq) + 1;
-			int sumOfPrevBigramsFreq = 0;
-			Iterator<?> iter = lastBigramAnalysis.keys();
-			while (sumOfPrevBigramsFreq < nextCharRank && iter.hasNext()) {
-				String nextChar = iter.next().toString();
-				sumOfPrevBigramsFreq += lastBigramAnalysis.getInt(nextChar);
-				if (sumOfPrevBigramsFreq >= nextCharRank) {
-					newWord += nextChar;
-					if (nextChar.equals("")) {
-						end = true;
-					}
-				}
+		while (true) {
+			JSONObject nextTrigramsPossibilities = getNextTrigramsPossibilities(newWord);
+			int randomNextCharRank = getRandomCharRank(nextTrigramsPossibilities);
+			int sumOfPreviousCharRank = 0;
+			String nextChar = "";
+			Iterator<?> iteratorNextChar = nextTrigramsPossibilities.keys();
+			while (!BasicFunctions.rankFound(sumOfPreviousCharRank, randomNextCharRank) && iteratorNextChar.hasNext()) {
+				nextChar = iteratorNextChar.next().toString();
+				sumOfPreviousCharRank += nextTrigramsPossibilities.getInt(nextChar);
+			}
+			newWord += nextChar;
+
+			if(endOfWord(nextChar)) {
+				break;
 			}
 		}
 		return newWord;
 	}
 
 	/**
-	 * Create the beginning of a word (the first bigram)
+	 * Get a random character rank in all the availables one
 	 * 
-	 * @return The beginning of a word
-	 * @throws JSONException : for JSON error
+	 * @param trigrams
+	 * @return
+	 * @throws JSONException
 	 */
-	private String getBeginOfWord() throws JSONException {
-		String newWord = "";
-		int bigramRank = random.nextInt(totalAnalyzedWords);
-		int sumOfPrevBigramsFreq = 0;
-		boolean find = false;
+	private int getRandomCharRank(JSONObject trigrams) throws JSONException {
+		int sumOfTrigramsFrequency = getSumOfTrigramsFrequency(trigrams);
+		return random.nextInt(sumOfTrigramsFrequency) + 1;
+	}
 
-		Iterator<?> iter = frequencyBigramsAnalysis.keys();
-		while (!find && iter.hasNext()) {
-			String firstChar = iter.next().toString();
-			while (firstChar.length() != 1) {
-				firstChar = iter.next().toString();
-			}
-			Iterator<?> iter2 = frequencyBigramsAnalysis.getJSONObject(firstChar).keys();
-			while (!find && iter2.hasNext()) {
-				String secondChar = iter2.next().toString();
-				sumOfPrevBigramsFreq += frequencyBigramsAnalysis.getJSONObject(firstChar).getInt(secondChar);
-				if (sumOfPrevBigramsFreq >= bigramRank) {
-					newWord = firstChar + secondChar;
-					find = true;
-				}
-			}
+	/**
+	 * Check if the character is a word end (empty)
+	 * 
+	 * @param character : the character to check
+	 * @return
+	 */
+	private boolean endOfWord(String character) {
+		return character.equals("");
+	}
+
+	/**
+	 * Get all the next possibles trigrams that match the end of a word
+	 * 
+	 * @param word : The word to use
+	 * @return the next possibles trigrams that can match the end of the word
+	 * @throws JSONException
+	 */
+	private JSONObject getNextTrigramsPossibilities(String word) throws JSONException {
+		int lastStone = word.length();
+		int firstStone = (lastStone >= 2) ? lastStone - 2 : 0;
+		String lastBigram = word.substring(firstStone, lastStone);
+		JSONObject nextTrigrams = trigramsAnalysis.getJSONObject(lastBigram);
+		return nextTrigrams;
+	}
+
+	/**
+	 * Get the two first letters of a word
+	 * 
+	 * @return The two first letters of a word
+	 * @throws JSONException
+	 */
+	private String getWordBeginning() throws JSONException {
+		int rankToFind = getRandomMonogramRank();
+		int sumOfPreviousTrigramsFrequency = 0;
+		String singleLetter = "";
+		String secondLetter = "";
+		JSONObject trigramsTwoLetters = new JSONObject();
+
+		// Get first letter
+		Iterator<?> iteratorSingleLetter = trigramsAnalysis.keys();
+		while (!BasicFunctions.rankFound(sumOfPreviousTrigramsFrequency, rankToFind) && iteratorSingleLetter.hasNext()) {
+			do {
+				singleLetter = iteratorSingleLetter.next().toString();
+			} while (singleLetter.length() != 1);
+			trigramsTwoLetters = trigramsAnalysis.getJSONObject(singleLetter);
+			sumOfPreviousTrigramsFrequency += getSumOfTrigramsFrequency(trigramsTwoLetters);
 		}
-		return newWord;
+
+		sumOfPreviousTrigramsFrequency -= getSumOfTrigramsFrequency(trigramsTwoLetters);
+
+		//Get second letter
+		Iterator<?> iteratorSecondLetter = trigramsTwoLetters.keys();
+		while (!BasicFunctions.rankFound(sumOfPreviousTrigramsFrequency, rankToFind) && iteratorSecondLetter.hasNext()) {
+			secondLetter = iteratorSecondLetter.next().toString();
+			sumOfPreviousTrigramsFrequency += trigramsTwoLetters.getInt(secondLetter);
+		}
+
+		if((singleLetter + secondLetter).equals("")) {
+			System.out.println(rankToFind);
+		}
+		return singleLetter + secondLetter;
+	}
+
+	/**
+	 * Get a random number that symbolizes the rank of a monogram
+	 * (bigram of 1 letter)
+	 * 
+	 * @return the random rank of a monogram
+	 */
+	private int getRandomMonogramRank() {
+		return random.nextInt(totalAnalyzedWords) + 1;
 	}
 
 	/**
@@ -213,15 +284,15 @@ public class WordAnalyzer {
 	 * 
 	 * @param bigram : The bigram we need to get the frequency
 	 * @return The frequency of appearance of a bigram
-	 * @throws JSONException : for JSON error
+	 * @throws JSONException
 	 */
-	private int getBigramFrequencyNumber(JSONObject bigram) throws JSONException {
-		int sumOfFrequencies = 0;
-		Iterator<?> iter = bigram.keys();
-		while (iter.hasNext()) {
-			String key = iter.next().toString();
-			sumOfFrequencies += bigram.getInt(key);
+	private int getSumOfTrigramsFrequency(JSONObject trigrams) throws JSONException {
+		int sumFrequencies = 0;
+		Iterator<?> thirdLetters = trigrams.keys();
+		while (thirdLetters.hasNext()) {
+			String thirdLetter = thirdLetters.next().toString();
+			sumFrequencies += trigrams.getInt(thirdLetter);
 		}
-		return sumOfFrequencies;
+		return sumFrequencies;
 	}
 }
