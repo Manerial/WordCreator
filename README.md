@@ -23,7 +23,7 @@ To launch it, you can :
 
 To change it : open the project from the Eclipse window -> open the src folder -> open the launcher package (folder) -> double click on Launcher.java
 
-## RESOURCES=====
+## RESOURCES
 This project uses different resources files.
 
 These files are stored in the resources folder of the WordCreator project.
