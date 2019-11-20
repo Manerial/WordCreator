@@ -1,4 +1,4 @@
-package word_analyser;
+package word_analyzer;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -10,10 +10,10 @@ import org.json.JSONObject;
 import utilities.BasicFunctions;
 import utilities.WordsFilesManager;
 
-public class WordAnalyserManager {
+public class WordAnalyzerManager {
 	private WordAnalyzer analyzer;
 
-	public WordAnalyserManager(WordAnalyzer analyzer) throws JSONException, IOException {
+	public WordAnalyzerManager(WordAnalyzer analyzer) throws JSONException, IOException {
 		setWordAnalyzer(analyzer);
 	}
 

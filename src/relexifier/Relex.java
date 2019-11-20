@@ -10,7 +10,7 @@ import org.json.JSONObject;
 
 import utilities.BasicFunctions;
 import utilities.WordsFilesManager;
-import word_analyser.WordAnalyzer;
+import word_analyzer.WordAnalyzer;
 
 public class Relex {
 	private WordAnalyzer analyzer;

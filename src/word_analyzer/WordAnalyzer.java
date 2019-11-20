@@ -1,4 +1,4 @@
-package word_analyser;
+package word_analyzer;
 import java.util.Iterator;
 import java.util.Random;
 

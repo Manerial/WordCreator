@@ -15,7 +15,7 @@ import java.util.List;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import word_analyser.WordAnalyzer;
+import word_analyzer.WordAnalyzer;
 
 public class WordsFilesManager {
 	private static String RESOURCE_PATH = System.getProperty("user.dir") + "\\resources\\";

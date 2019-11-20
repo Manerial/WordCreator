@@ -3,8 +3,8 @@ import java.io.*;
 import org.json.*;
 
 import relexifier.Relex;
-import word_analyser.WordAnalyserManager;
-import word_analyser.WordAnalyzer;
+import word_analyzer.WordAnalyzerManager;
+import word_analyzer.WordAnalyzer;
 
 /**
  * 
@@ -52,19 +52,19 @@ public class Launcher {
 	
 	public static void testAnalysisAndRegister(WordAnalyzer wordAnalyzer) throws JSONException, IOException {
 		System.out.println("testAnalysisAndRegister");
-		WordAnalyserManager wordAnalyserManager = new WordAnalyserManager(wordAnalyzer);
+		WordAnalyzerManager wordAnalyserManager = new WordAnalyzerManager(wordAnalyzer);
 		wordAnalyserManager.analysisAndRegister();
 	}
 	
 	public static void testCreateWordList(WordAnalyzer wordAnalyzer) throws JSONException, IOException {
 		System.out.println("testCreateWordList");
-		WordAnalyserManager wordAnalyserManager = new WordAnalyserManager(wordAnalyzer);
+		WordAnalyzerManager wordAnalyserManager = new WordAnalyzerManager(wordAnalyzer);
 		wordAnalyserManager.createWordList(1000, "");
 	}
 	
 	public static void testCreateWordListFixLength(WordAnalyzer wordAnalyzer) throws JSONException, IOException {
 		System.out.println("testCreateWordListFixLength");
-		WordAnalyserManager wordAnalyserManager = new WordAnalyserManager(wordAnalyzer);
+		WordAnalyzerManager wordAnalyserManager = new WordAnalyzerManager(wordAnalyzer);
 		wordAnalyserManager.setWordAnalyzer(wordAnalyzer);
 		wordAnalyserManager.createWordListFixLength(1000, "", 5);
 	}
