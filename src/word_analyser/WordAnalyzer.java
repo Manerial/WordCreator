@@ -295,4 +295,30 @@ public class WordAnalyzer {
 		}
 		return sumFrequencies;
 	}
+
+	public int calculateAmountOfLetters() {
+		int result = 0;
+		try {
+			Iterator<?> iter = trigramsAnalysis.keys();
+			while (iter.hasNext()) {
+				String key = (String) iter.next();
+				JSONObject object = trigramsAnalysis.getJSONObject(key);
+				Iterator<?> iter2 = object.keys();
+				while (iter2.hasNext()) {
+					String key2 = (String) iter2.next();
+					result += object.getInt(key2);
+				}
+			}
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	public void resetParameters() {
+		totalLetters = 0;
+		totalAnalyzedWords = 0;
+		trigramsAnalysis = new JSONObject();
+	}
 }

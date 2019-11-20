@@ -15,11 +15,12 @@ import word_analyser.WordAnalyzer;
 public class Relex {
 	private WordAnalyzer analyzer;
 
-	public Relex(WordAnalyzer analyzer) {
-		this.analyzer = analyzer;
+	public Relex(WordAnalyzer analyzer) throws JSONException, IOException {
+		setWordAnalyzer(analyzer);
 	}
 
-	public void setWordAnalyzer(WordAnalyzer analyzer) {
+	public void setWordAnalyzer(WordAnalyzer analyzer) throws JSONException, IOException {
+		WordsFilesManager.parseAnalysisFile(analyzer);
 		this.analyzer = analyzer;
 	}
 	
@@ -30,7 +31,6 @@ public class Relex {
 	 * @throws IOException : for file management errors
 	 */
 	public void createRelex() throws JSONException, IOException {
-		WordsFilesManager.parseAnalysisFile(analyzer);
 		List<String> sourceWordList = WordsFilesManager.parseElementsFileInList(analyzer);
 		List<String> relex = new ArrayList<>();
 		List<String> usedWords = new ArrayList<>();
@@ -42,7 +42,7 @@ public class Relex {
 			usedWords.add(createdWord);
 			relex.add(sourceWord + "\t:\t" + createdWord);
 		}
-		WordsFilesManager.printListInResultFile(analyzer, relex);
+		WordsFilesManager.printStringListInFile(analyzer, relex);
 	}
 
 	/**

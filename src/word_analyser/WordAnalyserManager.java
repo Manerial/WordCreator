@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import utilities.BasicFunctions;
 import utilities.WordsFilesManager;
@@ -12,11 +13,12 @@ import utilities.WordsFilesManager;
 public class WordAnalyserManager {
 	private WordAnalyzer analyzer;
 
-	public WordAnalyserManager(WordAnalyzer analyzer) {
+	public WordAnalyserManager(WordAnalyzer analyzer) throws JSONException, IOException {
 		setWordAnalyzer(analyzer);
 	}
 
-	public void setWordAnalyzer(WordAnalyzer analyzer) {
+	public void setWordAnalyzer(WordAnalyzer analyzer) throws JSONException, IOException {
+		WordsFilesManager.parseAnalysisFile(analyzer);
 		this.analyzer = analyzer;
 	}
 
@@ -26,6 +28,7 @@ public class WordAnalyserManager {
 	 * @throws IOException : All the IO exceptions
 	 */
 	public void analysisAndRegister() throws JSONException, IOException {
+		analyzer.resetParameters();
 		BufferedReader br = WordsFilesManager.readElementsFile(analyzer);
 		String word;
 		while ((word = br.readLine()) != null) {
@@ -44,7 +47,6 @@ public class WordAnalyserManager {
 	 * @throws IOException : for file management errors
 	 */
 	public void createWordList(int numberOfWords, String beginning) throws JSONException, IOException {
-		WordsFilesManager.parseAnalysisFile(analyzer);
 		List<String> createdWordList = new ArrayList<>();
 		for(int i = 0; i < numberOfWords; i++) {
 			String createdWord;
@@ -53,7 +55,7 @@ public class WordAnalyserManager {
 			} while (BasicFunctions.isWordUsed(createdWordList, createdWord));
 			createdWordList.add(createdWord);
 		}
-		WordsFilesManager.printListInResultFile(analyzer, createdWordList);
+		WordsFilesManager.printStringListInFile(analyzer, createdWordList);
 	}
 
 	/**
@@ -66,7 +68,6 @@ public class WordAnalyserManager {
 	 * @throws IOException : for file management errors
 	 */
 	public void createWordListFixLength(int numberOfWords, String beginning, int wordLength) throws JSONException, IOException {
-		WordsFilesManager.parseAnalysisFile(analyzer);
 		List<String> createdWordList = new ArrayList<>();
 		for(int i = 0; i < numberOfWords; i++) {
 			String createdWord;
@@ -75,6 +76,10 @@ public class WordAnalyserManager {
 			} while (BasicFunctions.isWordUsed(createdWordList, createdWord) || createdWord.length() != wordLength);
 			createdWordList.add(createdWord);
 		}
-		WordsFilesManager.printListInResultFile(analyzer, createdWordList);
+		WordsFilesManager.printStringListInFile(analyzer, createdWordList);
+	}
+
+	public int getAmountOfLetter() {
+		return analyzer.calculateAmountOfLetters();
 	}
 }

@@ -31,7 +31,7 @@ public class WordsFilesManager {
 	 * @throws JSONException : All the JSON exceptions
 	 */
 	public static void parseAnalysisFile(WordAnalyzer analyzer) throws JSONException, IOException {
-		BufferedReader br = readFile(ANALYSIS_FOLDER + analyzer.getAnalysisFilePath());
+		BufferedReader br = getBufferReader(ANALYSIS_FOLDER + analyzer.getAnalysisFilePath());
 		analyzer.setTotalLetters(Integer.parseInt(br.readLine()));
 		analyzer.setTotalAnalyzedWords(Integer.parseInt(br.readLine()));
 		analyzer.setTrigramsAnalysis(new JSONObject(br.readLine()));
@@ -45,7 +45,7 @@ public class WordsFilesManager {
 	 * @throws IOException : All the IO exceptions
 	 */
 	public static void saveAnalysisFile(WordAnalyzer analyzer) throws IOException {
-		PrintWriter outputFile = writeFile(ANALYSIS_FOLDER + analyzer.getAnalysisFilePath());
+		PrintWriter outputFile = getPrinterWriter(ANALYSIS_FOLDER + analyzer.getAnalysisFilePath());
 		outputFile.println(analyzer.getTotalLetters());
 		outputFile.println(analyzer.getTotalAnalyzedWords());
 		outputFile.println(analyzer.getTrigramsAnalysis());
@@ -76,10 +76,9 @@ public class WordsFilesManager {
 	 * @param analyzer : The analyzer that contains the RESULT file name
 	 * @param newWordList : The list of words to save
 	 * @throws IOException : All the IO exceptions
-	 * @throws JSONException : All the JSON exceptions
 	 */
-	public static void printListInResultFile(WordAnalyzer analyzer, List<String> newWordList) throws IOException, JSONException {
-		PrintWriter resultFile = writeFile(RESULT_FOLDER + analyzer.getResultsFilePath());
+	public static void printStringListInFile(WordAnalyzer analyzer, List<String> newWordList) throws IOException {
+		PrintWriter resultFile = getPrinterWriter(RESULT_FOLDER + analyzer.getResultsFilePath());
 		for (String newWord : newWordList) {
 			resultFile.println(newWord);
 		}
@@ -94,7 +93,7 @@ public class WordsFilesManager {
 	 * @throws FileNotFoundException : All the File Not Found exceptions
 	 */
 	public static BufferedReader readElementsFile(WordAnalyzer analyzer) throws FileNotFoundException {
-		return readFile(ELEMENTS_FOLDER + analyzer.getElementsFilePath());
+		return getBufferReader(ELEMENTS_FOLDER + analyzer.getElementsFilePath());
 	}
 
 	/**
@@ -105,7 +104,7 @@ public class WordsFilesManager {
 	 * @throws FileNotFoundException : All the File Not Found exceptions
 	 */
 	public static BufferedReader readResultsFile(WordAnalyzer analyzer) throws FileNotFoundException {
-		return readFile(RESULT_FOLDER + analyzer.getResultsFilePath());
+		return getBufferReader(RESULT_FOLDER + analyzer.getResultsFilePath());
 	}
 
 	/**
@@ -115,7 +114,7 @@ public class WordsFilesManager {
 	 * @return a BufferedReader with the path of the file to read
 	 * @throws FileNotFoundException : All the File Not Found exceptions
 	 */
-	private static BufferedReader readFile(String filePath) throws FileNotFoundException {
+	private static BufferedReader getBufferReader(String filePath) throws FileNotFoundException {
 		InputStream ips = new FileInputStream(filePath);
 		InputStreamReader ipsr = new InputStreamReader(ips);
 		return new BufferedReader(ipsr);
@@ -128,7 +127,7 @@ public class WordsFilesManager {
 	 * @return a BufferedWriter with the path of the file to write
 	 * @throws IOException : All the IO exceptions
 	 */
-	private static PrintWriter writeFile(String filePath) throws IOException {
+	private static PrintWriter getPrinterWriter(String filePath) throws IOException {
 		FileWriter fw = new FileWriter(filePath);
 		BufferedWriter bw = new BufferedWriter(fw);
 		return new PrintWriter(bw);
