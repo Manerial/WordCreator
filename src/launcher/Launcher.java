@@ -8,7 +8,7 @@ import word_analyzer.WordAnalyzer;
 
 /**
  * 
- * @author Julien HERMENT
+ * @author Manerial
  * Version 1.0, 13/03/2019
  * 
  */
