@@ -16,8 +16,11 @@ public class WordAnalyzerManager {
 		setWordAnalyzer(analyzer);
 	}
 
+	public WordAnalyzerManager() {
+		analyzer = new WordAnalyzer();
+	}
+
 	public void setWordAnalyzer(WordAnalyzer analyzer) throws JSONException, IOException {
-		WordsFilesManager.parseAnalysisFile(analyzer);
 		this.analyzer = analyzer;
 	}
 

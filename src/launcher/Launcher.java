@@ -22,32 +22,15 @@ public class Launcher {
 	 * @throws IOException : for file management errors
 	 */
 	public static void main(String[] args) throws JSONException, IOException {
-		String analysisFileName = "analysis_français.txt";
-		String elementsFileName = "français_all.txt";
-		String resultsFileName = "new_français.txt";
+		String analysisFileName = "analysis_animaux.txt";
+		String elementsFileName = "animaux.txt";
+		String resultsFileName = "new_animaux.txt";
 		WordAnalyzer wordAnalyzer = new WordAnalyzer();
 		wordAnalyzer.setAnalysisFilePath(analysisFileName);
 		wordAnalyzer.setElementsFilePath(elementsFileName);
 		wordAnalyzer.setResultsFilePath(resultsFileName);
 		testAnalysisAndRegister(wordAnalyzer);
 		
-		testCreateWordList(wordAnalyzer);
-		
-		resultsFileName = "new_français_length_5.txt";
-		wordAnalyzer.setResultsFilePath(resultsFileName);
-		testCreateWordListFixLength(wordAnalyzer);
-
-		elementsFileName = "français_common.txt";
-		resultsFileName = "relex_français.txt";
-		WordAnalyzer relexAnalyzer = new WordAnalyzer();
-		relexAnalyzer.setAnalysisFilePath(analysisFileName);
-		relexAnalyzer.setElementsFilePath(elementsFileName);
-		relexAnalyzer.setResultsFilePath(resultsFileName);
-		testCreateRelex(relexAnalyzer);
-
-		elementsFileName = "test_relex.txt";
-		relexAnalyzer.setElementsFilePath(elementsFileName);
-		testRelexifyText(relexAnalyzer);
 	}
 	
 	public static void testAnalysisAndRegister(WordAnalyzer wordAnalyzer) throws JSONException, IOException {
